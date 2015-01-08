@@ -34,6 +34,8 @@ if which tmux &> /dev/null
 	# Tmux states this should be screen-256color, but you may need to change it on
 	# systems without the proper terminfo
 	[[ -n "$ZSH_TMUX_FIXTERM_WITH_256COLOR" ]] || ZSH_TMUX_FIXTERM_WITH_256COLOR="screen-256color"
+    # Set the default session to attach/create if ZSH_TMUX_AUTOCONNECT is true
+    [[ -n "$ZSH_TMUX_AUTOCONNECT_SESSION" ]] || ZSH_TMUX_AUTOCONNECT_SESSION=""
 
 
 	# Get the absolute path to the current directory
@@ -67,7 +69,7 @@ if which tmux &> /dev/null
 		# Try to connect to an existing session.
 		elif [[ "$ZSH_TMUX_AUTOCONNECT" == "true" ]]
 		then
-			\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` attach || \tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG` new-session
+			\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` attach `[[ -n "$ZSH_TMUX_AUTOCONNECT_SESSION" ]] && echo "-t $ZSH_TMUX_AUTOCONNECT_SESSION"` || \tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG` new-session `[[ -n "$ZSH_TMUX_AUTOCONNECT_SESSION" ]] && echo "-s $ZSH_TMUX_AUTOCONNECT_SESSION"`
 			[[ "$ZSH_TMUX_AUTOQUIT" == "true" ]] && exit
 		# Just run tmux, fixing the TERM variable if requested.
 		else
