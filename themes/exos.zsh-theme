@@ -90,7 +90,7 @@ function {
 local ret_status="%(?:%{$fg_bold[green]%}⏺:%{$fg_bold[red]%}⏺)"
 
 PROMPT='${ret_status}%{$fg[blue]%}${PROMPT_HOST}${pname}%{$fg_bold[green]%}%p %{$fg_bold[yellow]%}%2~ ▶%{$reset_color%} '
-RPROMPT='%F{blue}$(pwd)%(?: :%{$fg_bold[red]%} %? )%F{yellow}[%*]%f'
+RPROMPT='%F{blue}$(pwd)%(?: :%{$fg_bold[red]%} %? %{$reset_color%} )%F{yellow}[%*]%f'
 
 presentation
 
