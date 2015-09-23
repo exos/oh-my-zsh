@@ -4,7 +4,7 @@ autoload -Uz vcs_info
 zstyle ':vcs_info:*' actionformats \
   '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
 
-zstyle ':vcs_info:*' formats '%F{2}%F{1}%b%F{2}%f '
+zstyle ':vcs_info:*' formats '%b'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
 zstyle ':vcs_info:*' enable git
 
@@ -12,6 +12,13 @@ add-zsh-hook precmd detect_pdir
 add-zsh-hook precmd prompt_vcs
 add-zsh-hook precmd prompt_virtualenv
 add-zsh-hook precmd prompt_projectname 
+
+EXOS_RIGHT_PATH_COLOR="236"
+EXOS_BRANCH_COLOR="012"
+EXOS_BRANCH_MASTER_COLOR="160"
+EXOS_PROJECT_COLOR="166"
+EXOS_DIVIDER_COLOR="178"
+EXOS_HOST_COLOR="057"
 
 presentation () {
     toilet -f future -F metal "$HOST $(date +%H:%m:%S)" 2> /dev/null && {
@@ -41,7 +48,11 @@ prompt_vcs () {
     if [ "${vcs_info_msg_0_}" = ""  ]; then
         cbranch=""
     else
-        cbranch="⭠${vcs_info_msg_0_}"
+        if [ "${vcs_info_msg_0_}" = "master" ]; then 
+            cbranch="%{[05m%}%F{$EXOS_BRANCH_MASTER_COLOR}⭠${vcs_info_msg_0_}%{$reset_color%}"
+        else 
+            cbranch="%F{$EXOS_BRANCH_COLOR}⭠${vcs_info_msg_0_}%f"
+        fi
     fi
 
 }
@@ -73,7 +84,7 @@ prompt_projectname () {
         fi
 
         if [[ -n $ppname ]]; then 
-            pname=" ⁅${ve_status}${ppname} ${cbranch}${dir_status} ⁆"
+            pname=" %F{$EXOS_DIVIDER_COLOR}⁅%f ${ve_status}%F{$EXOS_PROJECT_COLOR}${ppname}%f ${cbranch} ${dir_status} %F{$EXOS_DIVIDER_COLOR}⁆%f"
         fi
     fi
 
@@ -81,16 +92,16 @@ prompt_projectname () {
 
 function {
     if [[ -n "$SSH_CLIENT" ]]; then
-        PROMPT_HOST=" $HOST ➲ "
+        PROMPT_HOST="%F{$EXOS_HOST_COLOR} $HOST ➲ %f"
     else
         PROMPT_HOST=''
     fi
 }
 
-local ret_status="%(?:%{$fg_bold[green]%}⏺:%{$fg_bold[red]%}⏺)"
+local ret_status="%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})➜"
 
 PROMPT='${ret_status}%{$fg[blue]%}${PROMPT_HOST}${pname}%{$fg_bold[green]%}%p %{$fg_bold[yellow]%}%2~ ▶%{$reset_color%} '
-RPROMPT='%F{blue}$(pwd)%(?: :%{$fg_bold[red]%} %? %{$reset_color%} )%F{yellow}[%*]%f'
+RPROMPT='%F{$EXOS_RIGHT_PATH_COLOR}$(pwd)%f%(?: :%{$fg_bold[red]%} %? %{$reset_color%} )%F{yellow}[%*]%f'
 
 presentation
 
