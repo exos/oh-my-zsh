@@ -28,6 +28,14 @@ presentation () {
     }
 }
 
+system_info () {
+    if (( $+commands[fastfetch] )); then
+        fastfetch
+    elif (( $+commands[neofetch] )); then
+        neofetch
+    fi
+}
+
 detect_pdir () {
     pdir=$(git rev-parse --show-toplevel 2> /dev/null )
 }
@@ -104,5 +112,6 @@ PROMPT='${ret_status}%{$fg[blue]%}${PROMPT_HOST}${pname}%{$fg_bold[green]%}%p %{
 RPROMPT='%F{$EXOS_RIGHT_PATH_COLOR}$(pwd)%f%(?: :%{$fg_bold[red]%} %? %{$reset_color%} )%F{yellow}[%*]%f'
 
 presentation
+system_info
 
 #  vim: set ft=zsh ts=4 sw=4 et:
