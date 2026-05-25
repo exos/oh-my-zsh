@@ -1,3 +1,5 @@
+rehash 2>/dev/null
+
 autoload -U add-zsh-hook
 autoload -Uz vcs_info
 
